@@ -1,14 +1,18 @@
+package controller;
+
+import model.Process;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
-public class AllocationThread extends Thread {
+public class MemorySchedulerThread extends Thread {
     private Semaphore mutex, signal;
     private Queue<Process> Hold;
     private Queue<Process> Ready;
     private Queue<Process> temporal;
 
-    AllocationThread(Queue<Process> Hold, Queue<Process> Ready) {
+    public MemorySchedulerThread(Queue<Process> Hold, Queue<Process> Ready) {
         this.mutex = new Semaphore(0);
         this.Hold = Hold;
         this.Ready = Ready;
@@ -61,9 +65,7 @@ public class AllocationThread extends Thread {
 
                 // Remain Locked
             }
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -1,3 +1,5 @@
+package model;
+
 public class Process {
     private short id;
     private long arrivalTime;
@@ -5,7 +7,7 @@ public class Process {
     private long waitTime;
     private short memorySize;
 
-    Process(short id, long arrival, short burst, short memory) {
+    public Process(short id, long arrival, short burst, short memory) {
         this.id = id;
         this.arrivalTime = arrival;
         this.burstTime = burst;

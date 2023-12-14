@@ -1,3 +1,6 @@
+import controller.*;
+import model.Process;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -6,16 +9,21 @@ public class Main {
         Queue<Process> Hold = new LinkedList<Process>();
         Queue<Process> Ready = new LinkedList<Process>();
 
-        CreationThread Creation = new CreationThread(Hold);
-        AllocationThread Allocation = new AllocationThread(Hold, Ready);
-        ShortestJobFirstThread ShortestJobFirst = new ShortestJobFirstThread(Ready);
+        // Generate Random Processes
+        RandomGeneratorThread RandomGenerator = new RandomGeneratorThread(Hold);
+
+        // Memory Scheduler: First In First Out (FIFO)
+        MemorySchedulerThread MemoryScheduler = new MemorySchedulerThread(Hold, Ready);
+
+        // Process Scheduler: Shortest Job first (SFJ)
+        ProcessSchedulerThread ProcessScheduler = new ProcessSchedulerThread(Ready);
 
         // Set a signal between two threads
-        Creation.setSignal(Allocation.getSignal());
-        Allocation.setSignal(ShortestJobFirst.getSignal());
+        RandomGenerator.setSignal(MemoryScheduler.getSignal());
+        MemoryScheduler.setSignal(ProcessScheduler.getSignal());
 
-        Creation.start();
-        Allocation.start();
-        ShortestJobFirst.start();
+        RandomGenerator.start();
+        MemoryScheduler.start();
+        ProcessScheduler.start();
     }
 }

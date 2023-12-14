@@ -1,15 +1,19 @@
+package controller;
+
+import model.Process;
+
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 
-public class CreationThread extends Thread {
+public class RandomGeneratorThread extends Thread {
     private short id, time, burst, memory;
     private long arrival;
     private Random random;
     private Semaphore mutex, signal;
     private Queue<Process> Hold;
 
-    CreationThread(Queue<Process> Hold) {
+    public RandomGeneratorThread(Queue<Process> Hold) {
         this.id = 0;
         this.time = 0;
         this.arrival = 0;

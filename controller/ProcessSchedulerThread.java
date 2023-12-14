@@ -1,12 +1,16 @@
+package controller;
+
+import model.Process;
+
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
-public class ShortestJobFirstThread extends Thread {
+public class ProcessSchedulerThread extends Thread {
     private long waitTime = 0;
     private Semaphore mutex;
     private Queue<Process> Ready;
 
-    ShortestJobFirstThread(Queue<Process> Ready) {
+    public ProcessSchedulerThread(Queue<Process> Ready) {
         this.mutex = new Semaphore(0);
         this.Ready = Ready;
     }
