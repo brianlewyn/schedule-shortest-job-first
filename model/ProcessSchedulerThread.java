@@ -1,18 +1,22 @@
-package controller;
+package model;
 
-import model.Process;
-
-import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
-public class ProcessSchedulerThread extends Thread {
-    private long waitTime = 0;
-    private Semaphore mutex;
-    private Queue<Process> Ready;
+import controller.RunningManager;
+import controller.StatesManager;
 
-    public ProcessSchedulerThread(Queue<Process> Ready) {
+public class ProcessSchedulerThread extends Thread {
+    private Semaphore mutex;
+    private StatesManager Ready;
+    private StatesManager Finished;
+    private RunningManager Running;
+    private long waitTime = 0;
+
+    public ProcessSchedulerThread(StatesManager Ready, StatesManager Finished, RunningManager Running) {
         this.mutex = new Semaphore(0);
         this.Ready = Ready;
+        this.Finished = Finished;
+        this.Running = Running;
     }
 
     public Semaphore getSignal() {
@@ -20,15 +24,15 @@ public class ProcessSchedulerThread extends Thread {
     }
 
     private Process getShortest() {
-        Process shortest = Ready.peek();
+        Process shortest = Ready.queue.peek();
 
-        for (Process process : Ready) {
+        for (Process process : Ready.queue) {
             if (process.getBurstTime() < shortest.getBurstTime()) {
                 shortest = process;
             }
         }
 
-        Ready.remove(shortest);
+        Ready.queue.remove(shortest);
         return shortest;
     }
 
@@ -46,24 +50,34 @@ public class ProcessSchedulerThread extends Thread {
                 process.setWaitTime(waitTime);
 
                 // Restart wait time when ready queue is empty
-                if (Ready.isEmpty()) {
+                if (Ready.queue.isEmpty()) {
                     waitTime = 0;
                 }
 
-                // Simulate a process spending CPU time
-                for (short burstTime = process.getBurstTime(); burstTime > 0; burstTime--) {
+                // Add a process to the CPU
+                Running.add(process);
 
-                    // Show job progress for each CPU time
-                    System.out.println(process.toStringWitProgress(burstTime));
-                    Thread.sleep(Global.QUANTUM);
+                // Simulate a process spending CPU time
+                short burstTime = process.getBurstTime();
+                while (burstTime > 0) {
+                    Running.updateProgress(burstTime);
+                    Thread.sleep(OS.QUANTUM);
+
+                    if (Running.io) {
+                        burstTime--;
+                    } else {
+                        process.increaseBurstTime();
+                    }
                 }
-                System.out.println();
 
                 // Add shortest first job burst time
                 waitTime += process.getBurstTime();
 
                 // Return borrowed memory to RAM
-                Global.RAM += process.getMemorySize() * (long) Global.BYTE;
+                OS.RAM += process.getMemorySize() * (long) OS.BYTE;
+
+                // Add a process to the finished queue
+                Finished.addLong(process);
 
                 // Remain Locked
             }

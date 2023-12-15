@@ -1,25 +1,28 @@
-package controller;
+package model;
 
-import model.Process;
-
-import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 
-public class RandomGeneratorThread extends Thread {
-    private short id, time, burst, memory;
-    private long arrival;
-    private Random random;
-    private Semaphore mutex, signal;
-    private Queue<Process> Hold;
+import controller.StatesManager;
 
-    public RandomGeneratorThread(Queue<Process> Hold) {
+public class RandomGeneratorThread extends Thread {
+    private Semaphore mutex;
+    private Semaphore signal;
+    private Random random;
+    private StatesManager Hold;
+    private short id;
+    private short time;
+    private long arrival;
+    private short burst;
+    private short memory;
+
+    public RandomGeneratorThread(StatesManager Hold) {
+        this.mutex = new Semaphore(1);
+        this.random = new Random();
+        this.Hold = Hold;
         this.id = 0;
         this.time = 0;
         this.arrival = 0;
-        this.random = new Random();
-        this.mutex = new Semaphore(1);
-        this.Hold = Hold;
     }
 
     public void setSignal(Semaphore signal) {
@@ -29,26 +32,26 @@ public class RandomGeneratorThread extends Thread {
     @Override
     public void run() {
         try {
-            while (id < Global.NUMBER_PROCESSES) {
+            while (id < OS.NUMBER_PROCESSES) {
                 // Lock
                 mutex.acquire();
 
                 // Create a process
                 id++;
                 arrival += time;
-                burst = Global.Quantum(random);
-                memory = Global.Byte(random);
+                burst = OS.Quantum(random);
+                memory = OS.Byte(random);
                 Process process = new Process(id, arrival, burst, memory);
 
                 // Add a process to the hold queue
-                Hold.add(process);
+                Hold.addShort(process);
 
                 // Notify to ready queue (unlock signal)
                 signal.release();
 
                 // Simulate the arrival times of a process
-                time = Global.Time(random);
-                Thread.sleep(time * (long) Global.QUANTUM);
+                time = OS.Time(random);
+                Thread.sleep(time * (long) OS.QUANTUM);
 
                 // Unlock
                 mutex.release();
