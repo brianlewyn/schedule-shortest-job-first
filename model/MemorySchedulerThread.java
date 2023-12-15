@@ -3,6 +3,7 @@ package model;
 import java.util.concurrent.Semaphore;
 
 import controller.StatesManager;
+import controller.OS;
 
 public class MemorySchedulerThread extends Thread {
     private Semaphore mutex;
@@ -39,7 +40,7 @@ public class MemorySchedulerThread extends Thread {
                         Process process = Hold.queue.remove();
 
                         // Allocation memory to a process
-                        if (process.getMemorySize() <= OS.RAM) {
+                        if (process.getMemorySize() * OS.BYTE <= OS.RAM) {
                             OS.RAM -= process.getMemorySize() * OS.BYTE;
 
                             // Add a process to the ready queue

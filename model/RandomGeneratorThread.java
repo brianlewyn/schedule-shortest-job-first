@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 import controller.StatesManager;
+import controller.OS;
 
 public class RandomGeneratorThread extends Thread {
     private Semaphore mutex;
@@ -39,8 +40,8 @@ public class RandomGeneratorThread extends Thread {
                 // Create a process
                 id++;
                 arrival += time;
-                burst = OS.Quantum(random);
-                memory = OS.Byte(random);
+                burst = OS.getBurstTime(random);
+                memory = OS.getMemorySize(random);
                 Process process = new Process(id, arrival, burst, memory);
 
                 // Add a process to the hold queue
@@ -50,7 +51,7 @@ public class RandomGeneratorThread extends Thread {
                 signal.release();
 
                 // Simulate the arrival times of a process
-                time = OS.Time(random);
+                time = OS.getTimeBetweenProcesses(random);
                 Thread.sleep(time * (long) OS.QUANTUM);
 
                 // Unlock

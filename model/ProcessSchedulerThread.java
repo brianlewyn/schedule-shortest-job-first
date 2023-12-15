@@ -4,6 +4,7 @@ import java.util.concurrent.Semaphore;
 
 import controller.RunningManager;
 import controller.StatesManager;
+import controller.OS;
 
 public class ProcessSchedulerThread extends Thread {
     private Semaphore mutex;
