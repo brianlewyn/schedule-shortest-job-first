@@ -15,13 +15,13 @@ public class OS {
     public static short MAX_BYTE = 3000; // 3000B = 1MB
 
     public static short MIN_BURST = 1;
-    public final static short MAX_BURST = 10;
+    public static short MAX_BURST = 10;
 
     public static short MIN_MEMORY = 1;
-    public final static short MAX_MEMORY = 10;
+    public static short MAX_MEMORY = 10;
 
     public static short MIN_TIME = 1;
-    public final static short MAX_TIME = 10;
+    public static short MAX_TIME = 10;
 
     public static short getBurstTime(Random random) {
         return (short) (random.nextInt(MAX_BURST - MIN_BURST + 1) + MIN_BURST);

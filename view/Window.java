@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.Expression;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -80,7 +81,7 @@ public class Window extends JFrame {
 
         this.QuantumSlider = new JSlider(JSlider.HORIZONTAL, OS.MIN_QUANTUM, OS.MAX_QUANTUM, OS.QUANTUM);
         this.ByteSlider = new JSlider(JSlider.HORIZONTAL, OS.MIN_BYTE, OS.MAX_BYTE, OS.BYTE);
-        this.BurstSlider = new JSlider(JSlider.HORIZONTAL, OS.MIN_BURST, OS.MAX_BYTE, 1);
+        this.BurstSlider = new JSlider(JSlider.HORIZONTAL, OS.MIN_BURST, OS.MAX_BURST, 1);
         this.MemorySlider = new JSlider(JSlider.HORIZONTAL, OS.MIN_MEMORY, OS.MAX_MEMORY, 1);
         this.TimeSlider = new JSlider(JSlider.HORIZONTAL, OS.MIN_TIME, OS.MAX_TIME, 1);
     }
@@ -153,7 +154,7 @@ public class Window extends JFrame {
 
         JSlider[] sliders = { QuantumSlider, ByteSlider, BurstSlider, MemorySlider, TimeSlider };
         String[] titles = { "Quantum [1ms - 3000ms]", "Byte [1B-3000B]", "BurstTime [1Q - 10Q]",
-                "MemoryTime: [1Q - 10Q]", "TimeBetweenProcesses: [1Q - 10Q]" };
+                "MemorySize: [1B - 10B]", "TimeBetweenProcesses: [1Q - 10Q]" };
 
         for (int i = 0; i < sliders.length; i++) {
             JLabel title = new JLabel(titles[i]);
@@ -165,7 +166,6 @@ public class Window extends JFrame {
             grid.add(sliders[i]);
         }
 
-        // grid.setBackground(Color.BLACK);
         this.add(grid);
     }
 

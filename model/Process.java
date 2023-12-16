@@ -1,5 +1,7 @@
 package model;
 
+import controller.OS;
+
 public class Process {
     private short id;
     private long arrivalTime;
@@ -78,7 +80,11 @@ public class Process {
     }
 
     public String toVertical() {
-        return String.format("Process ID: %d\nArrival Time: %d\nBurst Time: %d\nWait Time: %d\nMemory Size: %d",
-                id, arrivalTime, burstTime, waitTime, memorySize);
+        return String.format(
+                "Process ID: %d\nArrival Time: %d (%d)\nBurst Time: %d (%d)\nWait Time: %d (%d)\nMemory Size: %d (%d)",
+                id, arrivalTime, arrivalTime * OS.QUANTUM,
+                burstTime, burstTime * OS.QUANTUM,
+                waitTime, waitTime * OS.QUANTUM,
+                memorySize, memorySize * OS.BYTE);
     }
 }
